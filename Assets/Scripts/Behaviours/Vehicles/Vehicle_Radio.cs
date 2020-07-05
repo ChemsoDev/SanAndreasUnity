@@ -91,7 +91,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         return;
                     }
 
-                    // update current station time - this is needed in case vehicle gets destroyed - current time will not be updated
+                    // update current station time - this is needed in case vehicle gets destroyed - current time will not be updated - or maybe it will ?
                     RadioStation.stations[m_currentRadioStationIndex].currentTime = m_radioAudioSource.time;
                 }
 
@@ -131,7 +131,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             m_isPlayingRadio = false;
             m_isWaitingForNewRadioSound = false;
 
-            if (m_currentRadioStationIndex >= 0)
+            // save current station's time
+            if (m_currentRadioStationIndex >= 0 && m_radioAudioSource.isPlaying)
                 RadioStation.stations[m_currentRadioStationIndex].currentTime = m_radioAudioSource.time;
 
             m_radioAudioSource.Stop();
@@ -192,7 +193,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_radioAudioSource.time = RadioStation.stations[m_currentRadioStationIndex].currentTime;
                 m_radioAudioSource.Play();
 
-                Destroy(clip, clip.length);
+                // this shouldn't be done because if the audio source is stopped and started again (eg. when ped exits the vehicle), 
+                // the clip may get destroyed before the audio source finishes playing
+                //Destroy(clip, clip.length);
             }
 
         }
